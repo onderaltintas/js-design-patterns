@@ -1,0 +1,430 @@
+setTimeout:
+setTimeout(function(){
+	console.log("Bu işlem 2 saniye sonra gerçekleştirilecektir.");
+}, 2000);
+console.log("Bu işlem hemen gerçekleştirilecektir");
+
+setInterval:
+var intervalId = setInterval(function(){
+	console.log("Bu işlem her saniye gerçekleştirilecektir.");
+}, 1000);
+
+setTimeout(function(){
+	console.log("Tekrar eden işlem durduruluyor");
+  clearInterval(intervalId);
+},10000);
+
+blocking:
+for(var i = 0; i < 1000000; i++){
+	document.getElementById("kutu").innerHTML = i;
+}
+
+non-blocking:
+function asenkron(i,callback){
+	setTimeout(function(){
+		document.getElementById("kutu").innerHTML = i;
+		i++;
+		callback(i,callback);		
+	},0);
+}
+
+asenkron(0,asenkron);
+
+async:
+async function asenkronFonksiyon() {
+  return "Merhaba!";
+}
+
+asenkronFonksiyon().then(
+  function(deger) {document.getElementById("kutu").innerHTML = deger;},
+  function(hata) {document.getElementById("kutu").innerHTML = hata.message;}
+);
+
+await:
+async function asenkronFonksiyon() {
+  let promise = new Promise(function(resolve, reject) {
+    resolve("Geri dönüş değeri");
+  });
+  
+  document.getElementById("kutu").innerHTML = await promise;
+}
+
+asenkronFonksiyon();
+
+await2:
+async function asenkronFonksiyon() {
+  let deger = 1;
+  let promise = new Promise(function(resolve, reject) {
+    setTimeout(function(){deger = 20; resolve(deger)},5000);
+  });
+  
+  document.getElementById("kutu").innerHTML = await promise;
+}
+
+asenkronFonksiyon();
+
+event loop:
+function senkronFonksiyon1(){
+	console.log("işlem1")
+}
+
+function senkronFonksiyon2(){
+	console.log("işlem2")
+}
+
+function asenkronFonksiyon1(){
+	console.log("asenkron işlem1")
+}
+
+function asenkronFonksiyon2(){
+	console.log("asenkron işlem2")
+}
+
+function program(){
+  setTimeout(asenkronFonksiyon1,1000);
+  setTimeout(asenkronFonksiyon2,2000);
+  senkronFonksiyon1();
+  senkronFonksiyon2();
+}
+
+program();
+
+Webworker (chrome için kısayola --allow-file-access-from-files eklenmeli):
+  ana thread:
+  var w1 = new Worker('webWorkerOrnek.js');
+  w1.postMessage("Merhaba worker");
+  w1.addEventListener('message',function(sonuc){
+    console.log("Workerdan gelen mesaj:"+sonuc.data);
+  });
+  worker thread:
+  onmessage = function(mesaj) {
+    console.log('Veri ana thread üzerinden iletildi:'+mesaj.data);
+    var workerResult = "Worker merhaba diyor!";
+    postMessage(workerResult);
+  }
+
+
+Obje oluşturma:
+var car = new Object();
+car.maxSpeed = 172;
+car.name = "Araba";
+car.run = function(){
+	document.getElementById("kutu").innerHTML = this.name + " aracı " + maxSpeed + "km/h ile gidiyor";
+}
+
+var ferrari = Object.create(Araba);
+ferrari.name = "Ferrari";
+ferrari.maxSpeed = 300;
+
+ferrari.run();
+
+Obje oluşturma alternatif:
+var car = {
+	maxSpeed: 172,
+	name: "Araba",
+	run: function(){document.getElementById("kutu").innerHTML = this.name + " aracı " + maxSpeed + "km/h ile gidiyor";}
+}
+
+Javascript OOP kabullenimleri ES5:
+function Car(name,year){
+  this._name = name;
+  this._year = year;
+  this.publicVariable = "publicVariable";
+  this._privateVariable = "privateVariable";
+}
+
+Car.prototype.publicFunction = function(){
+  console.log("Does what public function does");
+}
+
+Car.prototype._privateFunction = function(){
+  console.log("Does what private function does");
+}
+
+Javascript OOP kabullenimleri ES6:
+class Car {
+  constructor(name, year) {
+    this._name = name;
+    this._year = year;
+    this.publicVariable = "publicVariable";
+    this._privateVariable = "privateVariable";
+  }
+
+  publicFunction() {
+    console.log("Does what public function does");
+  }
+
+  _privateFunction() {
+    console.log("Does what private function does");
+  }
+}
+
+Klasik Sınıf Yaklaşımı constructor:
+function Araba() {
+  this.isim = "Araba";
+  this.hiz = 190;
+  this.git = function(){
+    console.log(this.isim + " " + this.hiz + "km/s hiz ile gidiyor");
+  }
+}
+
+Klasik Sınıf Yaklaşımı encapsulation:
+function Araba() {
+  var isim = "Araba";
+  this.hiz = 190;
+  this.git = git;
+  var bilgiVer = function() {
+    return isim + " " + self.hiz + "km/s hız ile gider";
+  }
+
+  this.getIsim = function() {
+    return isim;
+  }
+
+  this.bilgiVerPublic = function() {
+    return bilgiVer();
+  }
+
+  var self = this;
+}
+
+function git() {
+  return "gidiyor";
+}
+
+Klasik Sınıf Yaklaşımı inheritance:
+function SubClass(){
+  this.super = SuperClass;
+  this.super();
+
+  this.overrideEdilenFonksiyon = function(){
+    /*polimorfik işlemler*/
+  }
+}
+
+
+Klasik Sınıf Yaklaşımı:
+//Inherit edilecek olan SuperClass
+function SuperClass() {
+  //Fonksiyonun dışardan tanımlanması durumu
+  this.superTest = superTest;
+  //Sadece SuperClass a açık olan private variable
+  var privateVariable = "aa";
+  //Dışarıdan erişilebilen public variable
+  this.publicVariable = "bb";
+  //Private methodun public ve private variable'lara erişimi
+  var privateFunction = function() {
+    return privateVariable + " " + self.publicVariable;
+  }
+
+  //Private variable' ın public bir methodda kullanılması
+  this.getPrivateVariable = function() {
+    return privateVariable;
+  }
+
+  //Private methodun public bir methodda kullanılması
+  this.runPrivateFunction = function() {
+    return privateFunction();
+  }
+
+  //Private methodların public method ve variable' lara erişebilmesi için self kullanıyoruz
+  var self = this;
+}
+
+function superTest() {
+  return "superTest works!";
+}
+
+//Inherit eden SubClass
+function SubClass() {
+  //Super Class inheritance olayı
+  this.super = SuperClass;
+  this.super();
+
+  //Medhodun dışardan tanımlanması
+  this.subTest = subTest;
+
+  //SubClass private methodu
+  var subPrivateFunction = function() {
+    return self.subTest();
+  }
+
+  //Public method ile private methodun çalıştırılması
+  this.runSubPrivateFunction = function() {
+    return subPrivateFunction();
+  }
+
+  //Private method ve variable' ların public method ve variable' lara erişebilmesi için
+  self = this;
+}
+
+function subTest() {
+  return "subTest works!";
+}
+
+var objectFromSubClass = new SubClass();
+
+Prototype pattern constructor:
+function Vehicle (name, type) {
+  this.name = name;
+  this.type = type;
+};
+
+Prototype pattern method tanımı:
+function Vehicle (name, type) {
+  this.name = name;
+  this.type = type;
+};
+ 
+Vehicle.prototype.getName = function getName () {
+  return this.name;
+};
+
+Prototype pattern encapsulation kabullenimi:
+function Vehicle (name, type) {
+  this._privateVariable = "private";
+  this.name = name;
+  this.type = type;
+};
+ 
+Vehicle.prototype.getName = function getName () {
+  return this.name;
+};
+
+Vehicle.prototype._privateMethod = function getName () {
+  return this._privateVariable;
+};
+
+Prototype pattern:
+function Vehicle (name, type) {
+  this.name = name;
+  this.type = type;
+};
+ 
+Vehicle.prototype.getName = function getName () {
+  return this.name;
+};
+ 
+Vehicle.prototype.getType = function getType () {
+  return this.type;
+};
+
+function Car (name) {
+  this.base(this,name,'car');
+}
+
+inherits(Car, Vehicle)
+
+Car.prototype.getName = function () {
+  return 'It is a car: '+ this.name;
+};
+var car = new Car('Tesla');
+console.log(car.getName()); // It is a car: Tesla
+console.log(car.getType()); // car
+
+//Kalıtımı sağlayan mekanizma
+function inherits(childCtor, parentCtor) {
+  function tempCtor() {}
+  tempCtor.prototype = parentCtor.prototype;
+  childCtor.superClass_ = parentCtor.prototype;
+  childCtor.prototype = new tempCtor();
+  childCtor.prototype.constructor = childCtor;
+  childCtor.prototype.base = function(me,var_args) {
+    var args = new Array(arguments.length - 1);
+    for (var i = 1; i < arguments.length; i++) {
+      args[i - 1] = arguments[i];
+    }
+    return parentCtor.prototype['constructor'].apply(me,args);
+  };
+};
+
+ES6 sınıfları sınıf oluşturma:
+class Dikdortgen {
+  constructor(yukseklik, genislik) {
+    this.yukseklik = yukseklik;
+    this.genislik = genislik;
+  }
+}
+
+ES6 methodlar:
+class Dikdortgen {
+  constructor(yukseklik, genislik) {
+    this.yukseklik = yukseklik;
+    this.genislik = genislik;
+  }
+
+  get alan(){
+    return this.alanHesapla();
+  }
+
+  alanHesapla(){
+    return this.yukseklik*this.genislik;
+  }
+}
+
+let dikdortgen = new Dikdortgen(35,50);
+console.log(dikdortgen.alan);
+
+ES6 Statik method ve özellikler:
+class Nokta {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  static isim = "Nokta";
+  static mesafe(nokta1, nokta2){
+    let xDif = nokta1.x - nokta2.x;
+    let yDif = nokta1.y - nokta2.y;
+    return Math.sqrt(xDif*xDif + yDif*yDif);
+  }
+}
+
+let p1 = new Nokta(10,10);
+let p2 = new Nokta(13,14);
+console.log(p1.isim); //statik olduğu için undefined
+console.log(Nokta.isim); //Nokta
+console.log(Nokta.mesafe(p1,p2));
+
+ES6 private değişkenler:
+class Dikdortgen {
+  #yukseklik;
+  #genislik;
+  constructor(yukseklik, genislik) {
+    this.#yukseklik = yukseklik;
+    this.#genislik = genislik;
+  }
+  
+  get yukseklikGetir(){
+	  return this.#yukseklik;
+  }
+}
+
+ES6 kalıtım ve polimorfizm:
+class Hayvan {
+  constructor(name) {
+    this.name = name;
+  }
+
+  konus() {
+    console.log(this.name + " ses çıkarıyor");
+  }
+}
+
+class Kuzu extends Hayvan {
+  constructor(isim) {
+    super(isim); 
+  }
+
+  konus() {
+    console.log(this.name + " meeeliyor");
+  }
+}
+
+let s = new Kuzu('Prenses');
+s.konus(); 
+
+
+
+
+

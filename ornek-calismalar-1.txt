@@ -1,0 +1,187 @@
+Örnek Çalışma 1:
+function Dikdortgen(genislik, yukseklik){
+  this.genislik = genislik;
+  this.yukseklik = yukseklik;
+
+  this.alanBul = function(){
+    return genislik*yukseklik;
+  }
+}
+
+function Kare(kenarUzunlugu){
+  this.super = Dikdortgen;
+  this.super(kenarUzunlugu, kenarUzunlugu);
+}
+
+function Elips(cap1, cap2){
+  this.super = Dikdortgen;
+  this.super(cap1, cap2);
+
+  this.alanBul = function(){
+    return (this.genislik/2) * (this.yukseklik/2) * Math.PI;
+  }
+}
+
+Örnek Çalışma 2:
+function Pist(){
+  this.araclar = [];
+}
+
+Pist.prototype.aracEkle = function(arac){
+  this.araclar.push(arac);
+}
+
+Pist.prototype.yaris = function(){
+    var self = this;
+    setInterval(function(){
+      for(var i = 0; i < self.araclar.length; i++){
+        self.araclar[i].git();
+      }
+
+      self.araclar = self.araclar.sort(function(arac1, arac2){
+        return arac2.toplamYolAl() - arac1.toplamYolAl();
+      });
+
+      document.getElementById("kutu").innerHTML = self.araclar[0].isimAl() + ' ' + self.araclar[1].isimAl() + 'den ' 
+          + (self.araclar[0].toplamYolAl() - self.araclar[1].toplamYolAl()) + ' metre ileride.';  
+    }, 1000);
+}
+
+function Arac(isim, hiz){
+  this.isim = isim;
+  this.hiz = hiz;
+  this.toplamYol = 0;
+}
+
+Arac.prototype.git = function(){
+  this.toplamYol += this.hiz;
+}
+
+Arac.prototype.isimAl = function(){
+  return this.isim;
+}
+
+Arac.prototype.toplamYolAl = function(){
+  return this.toplamYol;
+}
+
+function Lamborgini(){
+  this.base(this, "Lamborgini", 96);
+}
+inherits(Lamborgini, Arac);
+
+function Ferrari(){
+  this.base(this, "Ferrari", 93);
+  this.saniyeSayaci = 0;
+  this.nosGucu = 11;
+}
+inherits(Ferrari, Arac);
+
+Ferrari.prototype.git = function(){
+  this.saniyeSayaci = (this.saniyeSayaci + 1) % 3;
+  this.toplamYol = this.saniyeSayaci === 0 ? this.toplamYol + this.hiz + this.nosGucu : this.toplamYol + this.hiz;
+}
+
+function program(){
+  var p = new Pist();
+  var f = new Ferrari();
+  var l = new Lamborgini();
+  p.aracEkle(f);
+  p.aracEkle(l);
+  p.yaris();
+}
+
+program();
+
+//Kalıtımı sağlayan mekanizma
+function inherits(childCtor, parentCtor) {
+  function tempCtor() {}
+  tempCtor.prototype = parentCtor.prototype;
+  childCtor.superClass_ = parentCtor.prototype;
+  childCtor.prototype = new tempCtor();
+  childCtor.prototype.constructor = childCtor;
+  childCtor.prototype.base = function(me,var_args) {
+    var args = new Array(arguments.length - 1);
+    for (var i = 1; i < arguments.length; i++) {
+      args[i - 1] = arguments[i];
+    }
+    return parentCtor.prototype['constructor'].apply(me,args);
+  };
+};
+
+Örnek Çalışma 3:
+class Pist{
+  constructor(){
+    this.araclar = [];
+  }
+
+  aracEkle(arac){
+    this.araclar.push(arac);
+  }
+
+  yaris(){
+    var self = this;
+    setInterval(function(){
+      for(var i = 0; i < self.araclar.length; i++){
+        self.araclar[i].git();
+      }
+
+      self.araclar = self.araclar.sort(function(arac1, arac2){
+        return arac2.toplamYolAl() - arac1.toplamYolAl();
+      });
+
+      document.getElementById("kutu").innerHTML = self.araclar[0].isimAl() + ' ' + self.araclar[1].isimAl() + 'den ' 
+          + (self.araclar[0].toplamYolAl() - self.araclar[1].toplamYolAl()) + ' metre ileride.';  
+    }, 1000);
+  }
+}
+  
+class Arac{
+  constructor(isim, hiz){
+    this.isim = isim;
+    this.hiz = hiz;
+    this.toplamYol = 0;
+  }
+
+  git(){
+    this.toplamYol += this.hiz;
+  }
+
+  isimAl(){
+    return this.isim;
+  }
+
+  toplamYolAl(){
+    return this.toplamYol;
+  }
+}
+
+class Lamborgini extends Arac{
+  constructor(){
+    super("Lamborgini", 96);
+  }
+}
+
+class Ferrari extends Arac{
+  constructor(){
+    super("Ferrari", 93);
+    this.saniyeSayaci = 0;
+    this.nosGucu = 11;
+  }
+
+  git(){
+    this.saniyeSayaci = (this.saniyeSayaci + 1) % 3;
+    this.toplamYol = this.saniyeSayaci === 0 ? this.toplamYol + this.hiz + this.nosGucu : this.toplamYol + this.hiz;
+  }
+}
+
+function program(){
+  var p = new Pist();
+  var f = new Ferrari();
+  var l = new Lamborgini();
+  p.aracEkle(f);
+  p.aracEkle(l);
+  p.yaris();
+}
+
+program();
