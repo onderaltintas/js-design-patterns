@@ -1,1 +1,2 @@
 https://loredanacirstea.github.io/es6-design-patterns/
+https://github.com/loredanacirstea/es6-design-patterns
