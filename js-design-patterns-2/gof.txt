@@ -1,0 +1,1479 @@
+Creational Patterns:
+  Abstract Factory
+class AbstractFactory {
+    constructor() {
+    }
+
+    createProductA (product) {
+    }
+
+    createProductB (product) {
+    }
+}
+
+class ConcreteFactory1 extends AbstractFactory {
+    constructor() {
+        super()
+        console.log("ConcreteFactory1 class created");
+    }
+
+    createProductA (product) {
+        console.log('ConcreteFactory1 createProductA')
+        return new ProductA1()
+    }
+
+    createProductB (product) {
+        console.log('ConcreteFactory1 createProductB')
+        return new ProductB1()
+    }
+}
+
+class ConcreteFactory2 extends AbstractFactory {
+    constructor() {
+        super()
+        console.log("ConcreteFactory2 class created");
+    }
+
+    createProductA (product) {
+        console.log('ConcreteFactory2 createProductA')
+        return new ProductA2()
+    }
+
+    createProductB (product) {
+        console.log('ConcreteFactory2 createProductB')
+        return new ProductB2()
+    }
+}
+
+class AbstractProductA {
+    constructor() {
+    }
+}
+
+class AbstractProductB {
+    constructor() {
+    }
+}
+
+
+class ProductA1 extends AbstractProductA {
+    constructor() {
+        super()
+        console.log('ProductA1 created')
+    }
+}
+
+class ProductA2 extends AbstractProductA {
+    constructor() {
+        super()
+        console.log('ProductA2 created')
+    }
+}
+
+class ProductB1 extends AbstractProductB {
+    constructor() {
+        super()
+        console.log('ProductB1 created')
+    }
+}
+
+class ProductB2 extends AbstractProductB {
+    constructor() {
+        super()
+        console.log('ProductB2 created')
+    }
+}
+
+function init_AbstractFactory() {
+    var factory1 = new ConcreteFactory1()
+    var productB1 = factory1.createProductB()
+    
+    var factory2 = new ConcreteFactory2()
+    var productA2 = factory2.createProductA()
+}
+  
+  Builder
+class Director {
+    constructor() {
+        this.structure = ['Window','Wall','Door'];
+        console.log("Director class created");
+    }
+
+    Construct (){
+        for(var all in this.structure){
+            let builder = new ConcreteBuilder()
+            builder.BuildPart(this.structure[all]);
+            builder.GetResult()
+        }
+    }
+}
+
+class Builder {
+    constructor() {
+    }
+
+    BuildPart (){
+    }
+}
+
+class ConcreteBuilder extends Builder {
+    constructor() {
+        super()
+        console.log("ConcreteBuilder class created");
+    }
+
+    BuildPart (rawmaterial){
+        console.log("ConcreteBuilder BuildPart()");
+        var material = rawmaterial
+        this.product = new Product(material)
+    }
+
+    GetResult (){
+        console.log(JSON.stringify(this.product))
+        return this.product
+    }
+}
+
+class Product {
+    constructor(material) {
+        console.log("Product class created");
+        this.data = material
+    }
+}
+
+function init_Builder() {
+    let director = new Director()
+    director.Construct()
+}
+
+  Factory Method
+class Productt {
+    constructor() {
+    }
+}
+
+class ConcreteProduct extends Productt {
+    constructor() {
+        super()
+        console.log('ConcreteProduct created')
+    }
+}
+
+class Creator {
+    constructor() {
+    }
+
+    FactoryMethod (){
+
+    }
+
+    AnOperation (){
+        console.log("AnOperation()")
+        this.product = this.FactoryMethod()
+        console.log(this.product instanceof ConcreteProduct)
+    }
+}
+
+class ConcreteCreator extends Creator {
+
+    constructor() {
+        super()
+        console.log('ConcreteCreator created')
+    }
+
+    FactoryMethod (){
+        return new ConcreteProduct();
+    }
+}
+
+function init_FactoryMethod() {
+    var factory = new ConcreteCreator()
+    factory.AnOperation()
+}
+
+  Prototype
+class Prototype {
+    constructor(prototype) {
+    }
+
+    Clone (){
+    }
+}
+
+class ConcretePrototype1 extends Prototype {
+    constructor() {
+        console.log("ConcretePrototype1 created");
+        super()
+        this.feature = "feature 1"
+    }
+
+    setFeature(key, val) {
+        this[key] = val
+    }
+
+    Clone (){
+        console.log('custom cloning function')
+        let clone = new ConcretePrototype1()
+        let keys = Object.keys(this)
+
+        keys.forEach(k => clone.setFeature(k, this[k]))
+
+        console.log("ConcretePrototype1 cloned");
+        return clone;
+    }
+}
+
+class ConcretePrototype2 extends Prototype {
+    constructor() {
+        console.log("ConcretePrototype2 created");
+        super()
+    }
+
+    Clone (){
+        console.log("ConcretePrototype2 cloned");
+        return clone;
+    }
+}
+
+function init_Prototype () {
+    var proto1 = new ConcretePrototype1()
+    proto1.setFeature('feature', "feature 22")
+    var clone1 = proto1.Clone()
+    console.log(clone1.feature)
+}
+
+  Singleton
+let _singleton = null
+
+class Singleton {
+    constructor (data) {
+        if(!_singleton) {
+            this.data = data
+            _singleton = this
+        }
+        else
+            return _singleton
+        console.log("Singleton class created")
+    }
+
+    SingletonOperation () {
+        console.log('SingletonOperation')
+    }
+
+    GetSingletonData () {
+        return this.data
+    }
+}
+
+function init_Singleton() {
+    var singleton1 = new Singleton("data1")
+    var singleton2 = new Singleton("data2")
+    console.log(singleton1.GetSingletonData())
+    console.log(singleton2.GetSingletonData())
+    console.log(singleton1 instanceof Singleton)
+    console.log(singleton2 instanceof Singleton)
+    console.log(singleton1 === singleton2)
+}
+
+Structural Patterns:
+  Adapter
+
+
+class Target {
+    constructor(type) {
+        let result
+
+        switch(type) {
+            case 'adapter':
+                result = new Adapter()
+                break
+            default:
+                result = null
+        }
+        return result
+    }
+
+    Request() {
+    }
+}
+
+
+class Adaptee {
+    constructor() {
+        console.log('Adaptee created')
+    }
+
+    SpecificRequest () {
+        console.log('Adaptee request')
+    }
+}
+
+
+class Adapter extends Adaptee {
+
+    constructor() {
+        super()
+        console.log('Adapter created')
+    }
+
+    Request (){
+        return this.SpecificRequest()
+    }
+}
+
+
+function init_Adapter() {
+    var f = new Target("adapter")
+    f.Request()
+}
+  
+  Bridge
+
+
+class Abstraction {
+    constructor() {
+    }
+
+    Operation (){
+        this.imp.OperationImp();
+    }
+}
+
+
+class RefinedAbstraction extends Abstraction {
+    constructor() {
+        super()
+        console.log('RefinedAbstraction created')
+    }
+
+    setImp (imp) {
+        this.imp = imp
+    }
+
+}
+
+
+class Implementor {
+    constructor() {
+    }
+
+    OperationImp (){
+    }
+}
+
+
+class ConcreteImplementorA extends Implementor {
+    constructor() {
+        super()
+        console.log('ConcreteImplementorA created')
+    }
+
+    OperationImp (){
+        console.log('ConcreteImplementorA OperationImp')
+    }
+}
+
+class ConcreteImplementorB extends Implementor {
+    constructor() {
+        super()
+        console.log('ConcreteImplementorB created')
+    }
+
+    OperationImp (){
+        console.log('ConcreteImplementorB OperationImp')
+    }
+}
+
+function init_Bridge() {
+    var abstraction = new RefinedAbstraction()
+    var state = Math.floor(Math.random()*2)
+    if(state)
+        abstraction.setImp(new ConcreteImplementorA())
+    else
+        abstraction.setImp(new ConcreteImplementorB())
+
+    abstraction.Operation()
+}
+
+  Composite
+
+
+class Component {
+    constructor() {
+    }
+
+    Operation (){
+    }
+
+    Add (Component){
+    }
+
+    Remove (Component){
+    }
+
+    GetChild (key){
+    }
+}
+
+class Leaf extends Component {
+    constructor(name) {
+        super()
+        this.name = name
+        console.log('Leaf created')
+    }
+
+    Operation (){
+        console.log(this.name)
+    }
+}
+
+class Composite extends Component {
+    constructor(name) {
+        super()
+        this.name = name
+        this.children = []
+        console.log('Composite created')
+    }
+
+    Operation (){
+        console.log('Composite Operation for: ' + this.name)
+        for(var i in this.children)
+            this.children[i].Operation()
+    }
+
+    Add (Component){
+        this.children.push(Component)
+    }
+
+    Remove (Component){
+        for(var i in this.children)
+            if(this.children[i] === Component)
+                this.children.splice(i, 1)
+    }
+
+    GetChild (key){
+        return this.children[key]
+    }
+}
+
+function init_Composite() {
+    var composite1 = new Composite('C1')
+    composite1.Add(new Leaf('L1'))
+    composite1.Add(new Leaf('L2'))
+    var composite2 = new Composite('C2')
+    composite2.Add(composite1)
+    composite1.GetChild(1).Operation()
+    composite2.Operation()
+}
+
+  Decorator
+
+
+class Componentt {
+    constructor() {
+    }
+
+    Operation (){
+    }
+}
+
+class ConcreteComponent extends Componentt {
+    constructor() {
+        super()
+        console.log('ConcreteComponent created')
+    }
+
+    Operation (){
+        console.log('o o')
+    }
+}
+
+class Decorator extends Componentt {
+    constructor(component) {
+        super()
+        this.component = component
+        console.log('Decorator created')
+    }
+
+    Operation (){
+        this.component.Operation()
+    }
+}
+
+class ConcreteDecoratorA extends Decorator {
+    constructor(component, sign) {
+        super(component)
+        this.addedState = sign
+        console.log('ConcreteDecoratorA created')
+    }
+
+    Operation (){
+        super.Operation()
+        console.log(this.addedState)
+    }
+}
+
+class ConcreteDecoratorB extends Decorator {
+    constructor(component, sign) {
+        super(component)
+        this.addedState = sign
+        console.log('ConcreteDecoratorA created')
+    }
+
+    Operation (){
+        super.Operation()
+        console.log(this.addedState + this.addedState + this.addedState + this.addedState + this.addedState)
+    }
+
+    AddedBehavior  (){
+        this.Operation()
+        console.log('|........|')
+    }
+}
+
+function init_Decorator() {
+    var component = new ConcreteComponent()
+    var decoratorA = new ConcreteDecoratorA(component, '!!!')
+    var decoratorB = new ConcreteDecoratorB(component, '.')
+    console.log('component: ')
+    component.Operation()
+    console.log('decoratorA: ')
+    decoratorA.Operation()
+    console.log('decoratorB: ')
+    decoratorB.AddedBehavior()
+}
+
+  Façade
+
+
+class Facade {
+    constructor () {
+        this.log("Facade class created");
+        this.htmlid = null;
+    }
+
+    log (text) {
+        if(typeof this.htmlid === null){
+            console.log(text);
+        }
+        else{
+            $('#'+this.htmlid).append(text+'</br>');
+        }
+    }
+
+    erase () {
+        $("#"+this.htmlid).html('');
+    }
+
+    test_dp (dp) {
+        switch(dp){
+            case "Facade":
+                this.htmlid = "test_Facade"
+                this.erase()
+                this.log("This is the Facade")
+                break
+            case "AbstractFactory": 
+                this.htmlid = "test_AbstractFactory"
+                this.erase()
+                init_AbstractFactory()
+                break
+            case "Builder":
+                this.htmlid = "test_Builder"
+                this.erase()
+                init_Builder()
+                break;
+            case "Factory":
+                this.htmlid = "test_Factory"
+                this.erase()
+                init_FactoryMethod()
+                break
+            case "Prototype":
+                this.htmlid = "test_Prototype"
+                this.erase()
+                init_Prototype()
+                break
+            case "Singleton":
+                this.htmlid = "test_Singleton"
+                this.erase()
+                init_Singleton()
+                break
+            case "Adapter":
+                this.htmlid = "test_Adapter"
+                this.erase()
+                init_Adapter()
+                break
+            case "Bridge":
+                this.htmlid = "test_Bridge"
+                this.erase()
+                init_Bridge()
+                break
+            case "Composite":
+                this.htmlid = "test_Composite"
+                this.erase()
+                init_Composite()
+                break
+            case "Decorator":
+                this.htmlid = "test_Decorator"
+                this.erase()
+                init_Decorator()
+                break
+            case "Flyweight":
+                this.htmlid = "test_Flyweight"
+                this.erase()
+                init_Flyweight()
+                break
+            case "Proxy":
+                this.htmlid = "test_Proxy"
+                this.erase()
+                init_Proxy()
+                break
+            case "ChainofResponsibility":
+                this.htmlid = "test_ChainofResponsibility"
+                this.erase()
+                init_ChainofResponsibility()
+                break
+            case "Command":
+                this.htmlid = "test_Command"
+                this.erase()
+                init_Command()
+                break
+            case "Interpreter":
+                this.htmlid = "test_Interpreter"
+                this.erase()
+                init_Interpreter()
+                break
+            case "Iterator":
+                this.htmlid = "test_Iterator"
+                this.erase()
+                init_Iterator()
+                break
+            case "Mediator":
+                this.htmlid = "test_Mediator"
+                this.erase()
+                init_Mediator()
+                break
+            case "Memento":
+                this.htmlid = "test_Memento"
+                this.erase()
+                init_Memento()
+                break
+            case "Observer":
+                this.htmlid = "test_Observer"
+                this.erase()
+                init_Observer()
+                break
+            case "State":
+                this.htmlid = "test_State"
+                this.erase()
+                init_State()
+                break
+            case "Strategy":
+                this.htmlid = "test_Strategy"
+                this.erase()
+                init_Strategy()
+                break
+            case "TemplateMethod":
+                this.htmlid = "test_TemplateMethod"
+                this.erase()
+                init_TemplateMethod()
+                break
+            case "Visitor":
+                this.htmlid = "test_Visitor";
+                this.erase();
+                init_Visitor()
+                break;
+            default:
+                console.log("nothing to test");
+        }
+    }
+}
+
+  Flyweight
+
+
+class FlyweightFactory {
+    constructor() {
+        this.flyweights = {};
+        console.log('FlyweightFactory created')
+    }
+
+    GetFlyweight (key){
+        if(this.flyweights[key]){
+            return this.flyweights[key];
+        }
+        else{
+            this.flyweights[key] = new ConcreteFlyweight(key);
+            return this.flyweights[key];
+        }
+    }
+
+    CreateGibberish (keys) {
+        return new UnsharedConcreteFlyweight(keys, this)
+    }
+}
+
+class Flyweight {
+    constructor() {
+    }
+
+    Operation (extrinsicState){
+    }
+}
+
+
+class ConcreteFlyweight extends Flyweight {
+   constructor(key) {
+        super()
+        this.intrinsicState = key
+        console.log('ConcreteFlyweight created')
+    }
+
+    Operation (extrinsicState){
+        return extrinsicState + this.intrinsicState
+    }
+}
+
+class UnsharedConcreteFlyweight extends Flyweight {
+    constructor(keys, flyweights) {
+        super()
+        this.flyweights = flyweights
+        this.keys = keys
+        console.log('UnsharedConcreteFlyweight created')
+    }
+
+    Operation (extrinsicState){
+        var key, word = ''
+
+        for(var i = 0; i < extrinsicState; i++) {
+            //random key
+            key = this.keys[Math.floor(Math.random() * (this.keys.length))]
+            word = this.flyweights.GetFlyweight(key).Operation(word)
+        }
+        console.log('UnsharedConcreteFlyweight Operation: ')
+        console.log(word)
+    }
+}
+
+function init_Flyweight() {
+    var flyweights = new FlyweightFactory()
+    var gibberish = flyweights.CreateGibberish(['-', '+', '*'])
+    gibberish.Operation(5)
+    gibberish.Operation(10)
+}
+
+  Proxy
+
+
+class Subject {
+    constructor() {
+    }
+
+    Request (){
+    }
+}
+
+class RealSubject extends Subject {
+    constructor() {
+        super()
+        console.log('RealSubject created')
+    }
+
+    Request (){
+        console.log('RealSubject handles request')
+    }
+}
+
+class Proxy extends Subject {
+    constructor() {
+        super()
+        console.log('Proxy created')
+    }
+
+    Request (){
+        this.realSubject = new RealSubject();
+        this.realSubject.Request();
+    }
+}
+
+function init_Proxy() {
+    var proxy = new Proxy()
+    proxy.Request()
+}
+
+Behavioral Patterns:
+  Chain of Responsibility
+
+class Handler {
+    constructor() {
+    }
+    HandleRequest() {
+    }
+}
+
+class ConcreteHandler1 extends Handler {
+    constructor() {
+        super()
+        console.log('ConcreteHandler1 created')
+    }
+
+    setSuccessor (successor) {
+        this.successor = successor
+    }
+
+    HandleRequest(request) {
+        if (request === 'run')
+            console.log('ConcreteHandler1 has handled the request')
+        else {
+            console.log('ConcreteHandler1 calls his successor')
+            this.successor.HandleRequest(request)
+        }
+    }
+}
+
+class ConcreteHandler2 extends Handler {
+    constructor() {
+        super()
+        console.log('ConcreteHandler2 created')
+    }
+
+    HandleRequest(request) {
+        console.log('ConcreteHandler2 has handled the request')
+    }
+}
+
+function init_ChainofResponsibility() {
+    let handle1 = new ConcreteHandler1()
+    let handle2 = new ConcreteHandler2()
+    handle1.setSuccessor(handle2)
+    handle1.HandleRequest('run')
+    handle1.HandleRequest('stay')
+
+}
+
+  Command
+class Invoker {
+    constructor() {
+        console.log('Invoker created')
+    }
+
+    StoreCommand(command) {
+        this.command = command
+    }
+}
+
+class Command {
+    constructor() {
+    }
+
+    Execute() {
+    }
+}
+
+class ConcreteCommand extends Command {
+    constructor(receiver, state) {
+        super()
+        this.receiver = receiver
+        console.log('ConcreteCommand created')
+    }
+    
+    Execute() {
+        console.log('ConcreteCommand Execute')
+        this.receiver.Action();
+    }
+}
+
+class Receiver {
+    constructor() {
+        console.log('Receiver created')
+    }
+
+    Action() {
+        console.log('Receiver Action')
+    }
+}
+
+
+function init_Command() {
+    var invoker = new Invoker()
+    var receiver = new Receiver()
+    var command = new ConcreteCommand(receiver)
+    invoker.StoreCommand(command)
+    invoker.command.Execute()
+}
+
+  Interpreter
+class Context {
+    constructor(input) {
+        this.input = input
+        this.index = 0
+        this.output = null
+    }
+
+    Lookup(expr) {
+        //return this.
+    }
+}
+
+class AbstractExpression {
+    constructor() {
+    }
+
+    Interpret (context){
+    }
+}
+
+class TerminalExpression extends AbstractExpression {
+    constructor(name) {
+        super()
+        this.name = name
+        console.log('TerminalExpression created')
+    }
+
+	Interpret (context){
+    }
+}
+
+class NonterminalExpression extends AbstractExpression {
+    constructor() {
+        super()
+        this.name = '+'
+        console.log('NonterminalExpression created')
+    }
+
+	Interpret (context){
+
+        return terminal1.Interpret() + terminal2
+    }
+}
+
+function init_Interpreter() {
+    //var context = new Context('A+B+A')
+    console.log('Not implemented')
+}
+
+  Iterator
+
+
+class Iterator {
+    constructor() {
+    }
+
+    First (){
+    }
+
+    Next (){
+    }
+
+    IsDone (){
+    }
+
+    CurrentItem (){
+    }
+}
+
+class ConcreteIterator extends Iterator {
+    constructor(aggregate) {
+        super()
+        console.log('ConcreteIterator created')
+        this.index = 0
+        this.aggregate = aggregate
+    }
+
+    First (){
+        return this.aggregate.list[0]
+    }
+
+    Next (){
+        this.index += 2
+        return this.aggregate.list[this.index]
+    }
+
+    CurrentItem (){
+        return this.aggregate.list[this.index]
+    }
+}
+
+class Aggregate {
+    constructor() {
+    }
+
+    CreateIterator (){
+    }
+}
+
+class ConcreteAggregate extends Aggregate {
+    constructor(list) {
+        super()
+        this.list = list
+        console.log('ConcreteAggregate created')
+    }
+
+	CreateIterator (){
+		this.iterator = new ConcreteIterator(this);
+    }
+}
+
+function init_Iterator() {
+    var aggregate = new ConcreteAggregate([0,1,2,3,4,5,6,7])
+    aggregate.CreateIterator()
+    console.log(aggregate.iterator.First())
+    console.log(aggregate.iterator.Next())
+    console.log(aggregate.iterator.CurrentItem())
+}
+
+  Mediator
+class Mediator {
+    constructor() {
+    }
+
+    ColleagueChanged(colleague) {
+
+    }
+}
+
+class ConcreteMediator extends Mediator {
+    constructor() {
+        super()
+        console.log('ConcreteMediator created')
+        this.colleague1 = new ConcreteColleague1(this)
+        this.colleague2 = new ConcreteColleague2(this)
+    }
+
+    ColleagueChanged(colleague) {
+        switch(colleague) {
+            case this.colleague1:
+                console.log('ConcreteColleague1 has Changed -> change ConcreteColleague2.feature: ')
+                this.colleague2.setFeature('new feature 2')
+                break
+            case this.colleague2:
+                console.log('ConcreteColleague2 has Changed, but do nothing')
+                break
+            default:
+                console.log('Do nothing')
+        }
+    }
+}
+
+class Colleague {
+    constructor() {
+    }
+
+    Changed() {
+        this.mediator.ColleagueChanged(this)
+    }
+}
+
+class ConcreteColleague1 extends Colleague {
+    constructor(mediator) {
+        super()
+        console.log('ConcreteColleague1 created')
+        this.mediator = mediator
+        this.feature = "feature 1"
+    }
+
+    setFeature(feature) {
+        console.log('ConcreteColleague1 Feature has changed from ' + this.feature + ' to ' + feature)
+        this.feature = feature
+        this.Changed()
+    }
+}
+class ConcreteColleague2 extends Colleague {
+    constructor(mediator) {
+        super()
+        console.log('ConcreteColleague2 created')
+        this.mediator = mediator
+        this.feature = "feature 2"
+    }
+
+    setFeature(feature) {
+        console.log('ConcreteColleague2 Feature has changed from ' + this.feature + ' to ' + feature)
+        this.feature = feature
+        this.Changed()
+    }
+}
+
+
+function init_Mediator() {
+    var mediator = new ConcreteMediator()
+    mediator.colleague1.setFeature("new feature 1")
+}
+
+  Memento
+class Originator {
+    constructor() {
+        console.log('Originator created')
+        this.state = 'a';
+        console.log('State= ' + this.state)
+    }
+
+    SetMemento (Memento){
+        this.state = Memento.GetState()
+        console.log('State= ' + this.state)
+    }
+
+    CreateMemento (state){
+        return new Memento(state);
+    }
+}
+
+class Memento {
+    constructor(state) {
+        this.state = state
+        console.log('Memento created. State= ' + this.state)
+    }
+
+    GetState (){
+        return this.state;
+    }
+
+    SetState (state){
+        this.state = state;
+    }
+}
+
+class Caretaker {
+    constructor() {
+        console.log('Caretaker created')
+        this.mementos = []
+    }
+
+    AddMemento(memento) {
+        console.log('Caretaker AddMemento')
+        this.mementos.push(memento)
+    }
+
+    SetMemento() {
+        return this.mementos[this.mementos.length-1]
+    }
+}
+
+function init_Memento() {
+    let caretaker = new Caretaker()
+    let originator = new Originator()
+    caretaker.AddMemento(originator.CreateMemento('b'))
+    originator.SetMemento(caretaker.SetMemento())
+    console.log(originator.state)
+}
+
+  Observer
+class Subjectt {
+    constructor() {
+    }
+
+    Attach (Observer){
+        this.observers.push(Observer);
+        console.log('Observer attached')
+    }
+
+    Dettach (Observer){
+        for(var i in this.observers)
+            if(this.observers[i] === Observer)
+                this.observers.splice(i, 1)
+    }
+
+    Notify (){
+        console.log('Subject Notify')
+        for(var i in this.observers){
+            this.observers[i].Update(this);
+        }
+    }
+}
+
+class ConcreteSubject extends Subjectt {
+    constructor() {
+        super()
+        this.subjectState = null
+        this.observers = []
+        console.log('ConcreteSubject created')
+    }
+
+    GetState() {
+        return this.subjectState;
+    }
+
+    SetState(state) {
+        this.subjectState = state;
+        this.Notify()
+    }
+}
+
+class Observer {
+    constructor() {
+    }
+
+    Update (){
+    }
+}
+
+class ConcreteObserver extends Observer {
+    constructor() {
+        super()
+        this.observerState = '';
+        console.log('ConcreteObserver created')
+    }
+
+    Update (Subject){
+        this.observerState = Subject.GetState();
+        console.log('Observer new state: ' + this.observerState)
+    }
+}
+
+function init_Observer() {
+    var observer1 = new ConcreteObserver()
+    var observer2 = new ConcreteObserver()
+    var subject = new ConcreteSubject()
+    subject.Attach(observer1)
+    subject.Attach(observer2)
+    subject.SetState('state 1')
+}
+
+  State
+class Contextt {
+    constructor(state) {
+        switch(state) {
+            case "A":
+                this.state = new ConcreteStateA()
+                break
+            case "B":
+                this.state = new ConcreteStateB()
+                break
+            default:
+                this.state = new ConcreteStateA()
+        }
+    }
+
+    Request (){
+        this.state.Handle(this);
+    }
+}
+
+class State {
+    constructor() {
+    }
+
+    Handle (){
+    }
+}
+
+class ConcreteStateA extends State {
+    constructor() {
+        super()
+        console.log('ConcreteStateA created')
+    }
+
+    Handle (context){
+        console.log('ConcreteStateA handle')
+    }
+}
+
+class ConcreteStateB extends State {
+    constructor() {
+        super()
+        console.log('ConcreteStateB created')
+    }
+
+    Handle (context){
+        console.log('ConcreteStateB handle')
+    }
+}
+
+function init_State() {
+    let context = new Contextt("A")
+    context.Request()
+}
+
+  Strategy
+
+
+class Contexttt {
+    constructor(type){
+        switch(type) {
+            case "A":
+                this.strategy = new ConcreteStrategyA()
+                break
+            case "B":
+                this.strategy = new ConcreteStrategyB()
+                break
+            default:
+                this.strategy = new ConcreteStrategyA()
+        }
+    }
+
+    ContextInterface (){
+        this.strategy.AlgorithmInterface()
+    }
+}
+
+class Strategy {
+    constructor() {
+    }
+
+    AlgorithmInterface (){
+    }
+}
+
+class ConcreteStrategyA extends Strategy{
+    constructor() {
+        super()
+        console.log('ConcreteStrategyA created')
+    }
+
+    AlgorithmInterface (){
+        console.log('ConcreteStrategyA algorithm')
+    }
+}
+
+class ConcreteStrategyB extends Strategy{
+    constructor() {
+        super()
+        console.log('ConcreteStrategyB created')
+    }
+
+    AlgorithmInterface (){
+        console.log('ConcreteStrategyB algorithm')
+    }
+}
+
+function init_Strategy() {
+    let contextA = new Contexttt("A")
+    contextA.ContextInterface()
+    let contextB = new Contexttt("B")
+    contextB.ContextInterface()
+}
+
+  Template Method
+
+
+class AbstractClass {
+    constructor() {
+    }
+
+    TemplateMethod (){
+        this.PrimitiveOperation1();
+        this.PrimitiveOperation2();
+    }
+
+    PrimitiveOperation1 (){
+    }
+
+    PrimitiveOperation2 (){
+    }  
+}
+
+class ConcreteClass extends AbstractClass {
+    constructor() {
+        super()
+        console.log("ConcreteClass created")
+    }
+
+    PrimitiveOperation1 (){
+        console.log('ConcreteClass PrimitiveOperation1')
+    }
+
+    PrimitiveOperation2 (){
+        console.log('ConcreteClass PrimitiveOperation2')
+    }  
+}
+
+function init_TemplateMethod() {
+    let class1 = new ConcreteClass()
+    class1.TemplateMethod()
+}  
+
+  Visitor
+
+
+class Visitor {
+    constructor() {
+    }
+
+    VisitConcreteElementA (ConcreteElementA){
+    }
+
+    VisitConcreteElementB (ConcreteElementB){
+    }  
+}
+
+class ConcreteVisitor1 extends Visitor {
+    constructor() {
+        super()
+        console.log("ConcreteVisitor1 created");
+    }
+
+    VisitConcreteElementA (ConcreteElementA){
+        console.log("ConcreteVisitor1 visited ConcreteElementA");
+    }
+
+    VisitConcreteElementB (ConcreteElementB){
+        console.log("ConcreteVisitor1 visited ConcreteElementB");
+    }  
+}
+
+class ConcreteVisitor2 extends Visitor {
+    constructor() {
+        super()
+        console.log("ConcreteVisitor2 created");
+    }
+
+    VisitConcreteElementA (ConcreteElementA){
+        console.log("ConcreteVisitor2 visited ConcreteElementA");
+    }
+
+    VisitConcreteElementB (ConcreteElementB){
+        console.log("ConcreteVisitor2 visited ConcreteElementB");
+    }  
+}
+
+class ObjectStructure {
+    constructor() {
+        console.log("ObjectStructure created");
+    }
+}
+
+class Element {
+    constructor() {
+    }
+
+    Accept (visitor){
+    }
+}
+
+class ConcreteElementA extends Element {
+    constructor() {
+        super()
+        console.log("ConcreteElementA created");
+    }
+
+    Accept (visitor){
+        visitor.VisitConcreteElementA(this);
+    }
+
+    OperationA (){
+        console.log("ConcreteElementA OperationA");  
+    }
+}
+
+class ConcreteElementB extends Element {
+    constructor() {
+        super()
+        console.log("ConcreteElementB created");
+    }
+
+    Accept (visitor){
+        visitor.VisitConcreteElementB(this);
+    }
+
+    OperationB (){
+        console.log("ConcreteElementB OperationB");  
+    }
+}
+
+
+function init_Visitor() {
+    let visitor1 = new ConcreteVisitor1();
+    let visitor2 = new ConcreteVisitor2();
+    let elementA = new ConcreteElementA();
+    let elementB = new ConcreteElementB();
+    elementA.Accept(visitor1);
+    elementB.Accept(visitor2);
+}
