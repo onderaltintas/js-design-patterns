@@ -1,0 +1,37 @@
+class Builder {
+    constructor() {
+    }
+
+    BuildPart (){
+    }
+}
+
+class StringBuilder extends Builder {
+    constructor() {
+        super()
+        this.text = new Text("");
+    }
+
+    add(additionalText){
+        this.text+= ' ' + additionalText;
+        return this;
+    }
+
+    GetResult (){
+        return this.text.getText();
+    }
+}
+
+class Text {
+    constructor(text) {
+        this.text = text;
+    }
+
+    getText(){
+        return this.text;
+    }
+}
+
+let builder = new StringBuilder();
+builder.add('Ali').add('ata').add('bak');
+console.log(builder.GetResult());

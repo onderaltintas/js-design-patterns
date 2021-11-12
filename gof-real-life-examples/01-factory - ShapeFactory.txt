@@ -1,0 +1,89 @@
+class AbstractShapeFactory {
+    constructor() {
+    }
+
+    createSquare (side) {
+    }
+
+    createCircle (radius) {
+    }
+}
+
+class ShapeFactory extends AbstractShapeFactory {
+    constructor() {
+        super()
+        this.defaultPosition = {x:0, y:0};
+        this.defaultColor = "red";
+        this.defaultLineType = "direct line";
+    }
+
+    setDefaultProperties(shape){
+        shape.setPosition(this.defaultPosition);
+        shape.setColor(this.defaultColor);
+        shape.setLineType(this.defaultLineType);
+        return shape;
+    }
+
+    createCircle (radius) {
+        let circle = new Circle(radius);
+        circle = this.setDefaultProperties(circle);
+        return circle;
+    }
+
+    createSquare (side) {
+        let square = new Square(side);
+        square = this.setDefaultProperties(circle);
+        return square;
+    }
+
+}
+
+class AbstractShape{
+    constructor(){
+    }
+
+    setPosition(position){
+        this.position = position;
+    }
+
+    setColor(color){
+        this.color = color;
+    }
+
+    setLineType(lineType){
+        this.lineType = lineType;
+    }
+}
+
+class AbstractSquare extends AbstractShape {
+    constructor() {
+        super();
+    }
+}
+
+class AbstractCircle extends AbstractShape{
+    constructor() {
+        super();
+    }
+}
+
+
+class Square extends AbstractSquare {
+    constructor(side, position) {
+        super()
+        this.side = side;
+    }
+}
+
+class Circle extends AbstractCircle {
+    constructor(radius, position) {
+        super()
+        this.radius = radius;
+    }
+}
+
+
+var factory = new ShapeFactory();
+var circle1 = factory.createCircle();
+var circle2 = factory.createCircle();
+var circle3 = factory.createCircle();

@@ -1,0 +1,43 @@
+let _licenseValidator = null
+
+class LicenseValidator {
+    constructor (licenseKey) {
+        if(!_licenseValidator) {
+            this.licenseKey = licenseKey;
+            this.validateLicenseKey(licenseKey);
+            _licenseValidator = this
+        }
+        else
+            return _licenseValidator
+    }
+
+    validateLicenseKey(licenseKey){
+        console.log("connecting license server...");
+        console.log("connected license server");
+        if(licenseKey === "AAA"){
+            this.valid = true;
+            console.log("your key is valid")
+        } else {
+            this.valid = false;
+            console.log("your key is invalid")
+        }
+    }
+
+    isLicenseKeyValid () {
+        return this.valid;
+    }
+
+    GetLicenseKey () {
+        return this.licenseKey
+    }
+}
+
+function init_Singleton() {
+    var licenseValidator1 = new LicenseValidator("AAA")
+    var licenseValidator2 = new LicenseValidator("BBB")
+    console.log(licenseValidator1.isLicenseKeyValid())
+    console.log(licenseValidator2.isLicenseKeyValid())
+    console.log(licenseValidator1 instanceof LicenseValidator)
+    console.log(licenseValidator2 instanceof LicenseValidator)
+    console.log(licenseValidator1 === licenseValidator2);
+}

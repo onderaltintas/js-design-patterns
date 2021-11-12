@@ -1,0 +1,52 @@
+class Prototype {
+    constructor(prototype) {
+    }
+
+    Clone (){
+    }
+}
+
+class Circle extends Prototype {
+    constructor(radius) {
+        super();
+        this.radius = radius;
+        this.position = {x:0,y:0}
+    }
+
+    setPosition(position){
+        this.position = position;
+    }
+    
+    move(xDif,yDif){
+        this.position.x += xDif;
+        this.position.y += yDif;
+    }
+
+    clone (){
+        let clone = new Circle(this.radius);
+        clone.setPosition(this.position);
+        return clone;
+    }
+}
+
+class MapX{
+    constructor(){
+        this.shapes = [];
+    }
+
+    addShape(shape){
+        this.shapes.push(shape);
+    }
+
+    moveShape(shape, xDif, yDif){
+        shape.move(xDif, yDif);
+    }
+}
+
+let m = new MapX();
+let circle = new Circle(35);
+m.addShape(circle);
+m.moveShape(circle, 35, 40);
+let copyShape = circle.clone();
+m.addShape(copyShape);
+m.moveShape(copyShape,10,10);
